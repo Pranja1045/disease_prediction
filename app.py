@@ -21,6 +21,10 @@ try:
 except Exception as e:
     st.error(f"Error loading models: {e}")
     st.stop()
+diabetes_model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+heart_disease_model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+parkinsons_model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+
 
 # Sidebar for navigation
 with st.sidebar:
