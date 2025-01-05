@@ -2,6 +2,9 @@ import os
 from tensorflow.keras.models import load_model
 import streamlit as st
 from streamlit_option_menu import option_menu
+from sklearn.preprocessing import StandardScaler
+
+scaler = StandardScaler()
 
 # Set page configuration
 st.set_page_config(page_title="Prediction of Disease Outbreaks",
@@ -9,13 +12,12 @@ st.set_page_config(page_title="Prediction of Disease Outbreaks",
                    page_icon="🧑‍⚕️")
 
 # Getting the working directory of the script
-working_dir = os.path.dirname(os.path.abspath(__file__))
 
 # Loading the saved models
 try:
-    diabetes_model = load_model(open(f'{working_dir}/my_models/model_diabetes_data.h5', 'rb'))
-    heart_disease_model = load_model(open(f'{working_dir}/my_models/model_heart_data.h5', 'rb'))
-    parkinsons_model = load_model(open(f'{working_dir}/my_models/model_parkinsons_data.h5', 'rb'))
+    diabetes_model = load_model('my_models/model_diabetes_data.h5')
+    heart_disease_model = load_model('my_models/model_heart_data.h5')
+    parkinsons_model = load_model('my_models/model_parkinsons_data.h5')
 except Exception as e:
     st.error(f"Error loading models: {e}")
     st.stop()
@@ -59,7 +61,8 @@ if selected == 'Diabetes Prediction':
     if st.button('Diabetes Test Result'):
         try:
             user_input = [float(x) for x in [Pregnancies, Glucose, BloodPressure, SkinThickness, Insulin, BMI, DiabetesPedigreeFunction, Age]]
-            diab_prediction = diabetes_model.predict([user_input])
+            user_input_scaled = scaler.fit_transform([user_input])
+            diab_prediction = diabetes_model.predict(user_input_scaled)
             diab_diagnosis = 'The person is diabetic' if diab_prediction[0] == 1 else 'The person is not diabetic'
         except Exception as e:
             st.error(f"Error in prediction: {e}")
@@ -104,7 +107,8 @@ if selected == 'Heart Disease Prediction':
     if st.button('Heart Disease Test Result'):
         try:
             user_input = [float(x) for x in [age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal]]
-            heart_prediction = heart_disease_model.predict([user_input])
+            user_input_scaled = scaler.fit_transform([user_input])
+            heart_prediction = heart_disease_model.predict(user_input_scaled)
             heart_diagnosis = 'The person is having heart disease' if heart_prediction[0] == 1 else 'The person does not have any heart disease'
         except Exception as e:
             st.error(f"Error in prediction: {e}")
@@ -167,7 +171,9 @@ if selected == "Parkinsons Prediction":
     if st.button("Parkinson's Test Result"):
         try:
             user_input = [float(x) for x in [fo, fhi, flo, Jitter_percent, Jitter_Abs, RAP, PPQ, DDP, Shimmer, Shimmer_dB, APQ3, APQ5, APQ, DDA, NHR, HNR, RPDE, DFA, spread1, spread2, D2, PPE]]
-            parkinsons_prediction = parkinsons_model.predict([user_input])
+            user_input_scaled = scaler.fit_transform([user_input])
+            
+            parkinsons_prediction = parkinsons_model.predict(user_input_scaled )
             parkinsons_diagnosis = "The person has Parkinson's disease" if parkinsons_prediction[0] == 1 else "The person does not have Parkinson's disease"
         except Exception as e:
             st.error(f"Error in prediction: {e}")
