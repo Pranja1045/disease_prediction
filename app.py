@@ -109,6 +109,7 @@ if selected == 'Heart Disease Prediction':
             user_input = [float(x) for x in [age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal]]
             user_input_scaled = scaler.fit_transform([user_input])
             heart_prediction = heart_disease_model.predict(user_input_scaled)
+            print(heart_predicition)
             heart_diagnosis = 'The person is having heart disease' if heart_prediction[0] == 1 else 'The person does not have any heart disease'
         except Exception as e:
             st.error(f"Error in prediction: {e}")
