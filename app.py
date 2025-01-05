@@ -1,5 +1,5 @@
 import os
-import pickle
+from tensorflow.keras.models import load_model
 import streamlit as st
 from streamlit_option_menu import option_menu
 
@@ -13,9 +13,9 @@ working_dir = os.path.dirname(os.path.abspath(__file__))
 
 # Loading the saved models
 try:
-    diabetes_model = pickle.load(open(f'{working_dir}/my_models/model_diabetes_data.h5', 'rb'))
-    heart_disease_model = pickle.load(open(f'{working_dir}/my_models/model_heart_data.h5', 'rb'))
-    parkinsons_model = pickle.load(open(f'{working_dir}/my_models/model_parkinsons_data.h5', 'rb'))
+    diabetes_model = load_model(open(f'{working_dir}/my_models/model_diabetes_data.h5', 'rb'))
+    heart_disease_model = load_model(open(f'{working_dir}/my_models/model_heart_data.h5', 'rb'))
+    parkinsons_model = load_model(open(f'{working_dir}/my_models/model_parkinsons_data.h5', 'rb'))
 except Exception as e:
     st.error(f"Error loading models: {e}")
     st.stop()
